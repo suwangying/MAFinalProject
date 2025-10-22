@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationServices
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var sosManager: SosManager
+    private lateinit var shakeDetector: ShakeDetector
     private val emergencyNumber = "+14167046052"  // replace with your own
     private val REQUEST_PERMS = 100
 
@@ -23,6 +24,13 @@ class HomeActivity : AppCompatActivity() {
 
         val fused = LocationServices.getFusedLocationProviderClient(this)
         sosManager = SosManager(this, fused, emergencyNumber)
+
+        // initialize the shake detector
+        shakeDetector = ShakeDetector(this) {
+            // this lambda runs whenever a shake is detected
+            Toast.makeText(this, "Shake detected! Sending SOS...", Toast.LENGTH_SHORT).show()
+            sosManager.triggerSOS("shake")
+        }
 
         val btnSOS = findViewById<Button>(R.id.btnSOS)
         val btnContacts = findViewById<Button>(R.id.btnContacts)
@@ -65,7 +73,20 @@ class HomeActivity : AppCompatActivity() {
             // TODO: Logout User
         }
 
+        // make sure permissions are requested early so shake can send SMS
+        requestDangerousPermissionsIfNeeded()
+
     }
+    override fun onResume() {
+        super.onResume()
+        shakeDetector.start()   // start listening for shakes
+    }
+
+    override fun onPause() {
+        super.onPause()
+        shakeDetector.stop()    // stop listening to save battery
+    }
+
     private fun requestDangerousPermissionsIfNeeded() {
         val needed = mutableListOf<String>()
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
