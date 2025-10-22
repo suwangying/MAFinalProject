@@ -14,7 +14,8 @@ import com.google.android.gms.location.LocationServices
 class HomeActivity : AppCompatActivity() {
     private lateinit var sosManager: SosManager
     private lateinit var shakeDetector: ShakeDetector
-    private val emergencyNumber = "+14167046052"  // replace with your own
+    private val emergencyNumber = "+14167046052"
+        // "+16473305859"   // replace with your own
     private val REQUEST_PERMS = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
