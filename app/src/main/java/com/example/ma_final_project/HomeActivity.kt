@@ -17,6 +17,9 @@ class HomeActivity : AppCompatActivity() {
     private val emergencyNumber = "+14167046052"  // replace with your own
     private val REQUEST_PERMS = 100
 
+    // if we asked for permission mid-flow, remember why we wanted to send
+    private var pendingReason: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,8 +31,7 @@ class HomeActivity : AppCompatActivity() {
         // initialize the shake detector
         shakeDetector = ShakeDetector(this) {
             // this lambda runs whenever a shake is detected
-            Toast.makeText(this, "Shake detected! Sending SOS...", Toast.LENGTH_SHORT).show()
-            sosManager.triggerSOS("shake")
+            sendAfterPermissions("shake")
         }
 
         val btnSOS = findViewById<Button>(R.id.btnSOS)
@@ -39,44 +41,24 @@ class HomeActivity : AppCompatActivity() {
         val btnBack = findViewById<Button>(R.id.btnBack)
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
-
         // Back Button
-        btnBack.setOnClickListener {
-            finish()
-        }
+        btnBack.setOnClickListener { finish() }
 
         // SOS Button
         btnSOS.setOnClickListener {
-            requestDangerousPermissionsIfNeeded()
-            sosManager.triggerSOS("button")
+            sendAfterPermissions("button")
         }
 
-        // Emergency Contacts
-        btnContacts.setOnClickListener {
-            /*val intent = Intent(this, ContactsActivity::class.java)
-            startActivity(intent)*/
-        }
+        // (your other buttons unchanged)
+        btnContacts.setOnClickListener { /* startActivity(Intent(...)) */ }
+        btnSafeLocations.setOnClickListener { /* startActivity(Intent(...)) */ }
+        btnProfile.setOnClickListener { /* startActivity(Intent(...)) */ }
+        btnLogout.setOnClickListener { /* logout user */ }
 
-        // Safe Locations
-        btnSafeLocations.setOnClickListener {
-            /*val intent = Intent(this, SafeLocationsActivity::class.java)
-            startActivity(intent)*/
-        }
-
-        // User Profile
-        btnProfile.setOnClickListener {
-            /*val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)*/
-        }
-
-        btnLogout.setOnClickListener {
-            // TODO: Logout User
-        }
-
-        // make sure permissions are requested early so shake can send SMS
+        // request early so first tap/shake can work immediately
         requestDangerousPermissionsIfNeeded()
-
     }
+
     override fun onResume() {
         super.onResume()
         shakeDetector.start()   // start listening for shakes
@@ -85,6 +67,28 @@ class HomeActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         shakeDetector.stop()    // stop listening to save battery
+    }
+
+    private fun sendAfterPermissions(reason: String) {
+        // We require SEND_SMS to actually send the text.
+        val hasSms = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) ==
+                PackageManager.PERMISSION_GRANTED
+        if (!hasSms) {
+            pendingReason = reason
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SEND_SMS), REQUEST_PERMS)
+            return
+        }
+
+        // Location is optional (we’ll send a fallback if it’s not granted)
+        val hasFine = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED
+        if (!hasFine) {
+            // request fine too, but we won't block sending on it
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMS)
+        }
+
+        // Now actually send
+        sosManager.triggerSOS(reason)
     }
 
     private fun requestDangerousPermissionsIfNeeded() {
@@ -107,13 +111,22 @@ class HomeActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMS) {
-            val denied = grantResults.indices.filter {
-                grantResults[it] != PackageManager.PERMISSION_GRANTED
+            val grantedMap = permissions.indices.associate { i ->
+                permissions[i] to (grantResults[i] == PackageManager.PERMISSION_GRANTED)
             }
+
+            // If SEND_SMS was just granted and we had a pending reason, finish the send now.
+            if (grantedMap[Manifest.permission.SEND_SMS] == true) {
+                pendingReason?.let {
+                    sosManager.triggerSOS(it)
+                    pendingReason = null
+                }
+            }
+
+            val denied = permissions.indices.filter { grantResults[it] != PackageManager.PERMISSION_GRANTED }
             if (denied.isNotEmpty()) {
-                Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Some permissions denied: $denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 }
