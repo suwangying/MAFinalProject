@@ -11,7 +11,7 @@ import kotlin.math.sqrt
 
 class ShakeDetector(
     context: Context,
-    private val threshold: Float = 15f,   // same as your original
+    private val threshold: Float = 25f,   // same as your original
     private val debounceMs: Long = 500L,  // ignore rapid repeats
     private val onShake: () -> Unit
 ) {
