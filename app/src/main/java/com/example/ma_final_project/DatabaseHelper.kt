@@ -1,4 +1,4 @@
-package com.example.emergencyapp
+package com.example.ma_final_project
 
 import android.content.ContentValues
 import android.content.Context

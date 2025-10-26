@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
             // Proceed to HomeActivity
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
 
@@ -86,8 +85,8 @@ class MainActivity : AppCompatActivity() {
 
         // Forgot Password Link -> go to Forgot Password Page
         forgotPasswd.setOnClickListener {
-            /*val intent = Intent(this, ForgotPasswordActivity::class.java)
-            startActivity(intent)*/
+           val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
     }
 }
