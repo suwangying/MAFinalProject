@@ -24,17 +24,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        /*val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
-        val loggedInUser = prefs.getString("USER_PHONE", null)
-
-        if (loggedInUser != null) {
-            // User already logged in → go to HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        }*/
-
         setContentView(R.layout.activity_home)
 
         val fused = LocationServices.getFusedLocationProviderClient(this)
