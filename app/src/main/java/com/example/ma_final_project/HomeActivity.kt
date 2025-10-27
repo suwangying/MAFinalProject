@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import android.content.Intent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,6 +24,17 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        /*val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
+        val loggedInUser = prefs.getString("USER_PHONE", null)
+
+        if (loggedInUser != null) {
+            // User already logged in → go to HomeActivity
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }*/
+
         setContentView(R.layout.activity_home)
 
         val fused = LocationServices.getFusedLocationProviderClient(this)
@@ -53,7 +65,16 @@ class HomeActivity : AppCompatActivity() {
         btnContacts.setOnClickListener { /* startActivity(Intent(...)) */ }
         btnSafeLocations.setOnClickListener { /* startActivity(Intent(...)) */ }
         btnProfile.setOnClickListener { /* startActivity(Intent(...)) */ }
-        btnLogout.setOnClickListener { /* logout user */ }
+
+        btnLogout.setOnClickListener {
+            val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
+            prefs.edit().clear().apply() // Clear user session
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
 
         // request early so first tap/shake can work immediately
         requestDangerousPermissionsIfNeeded()

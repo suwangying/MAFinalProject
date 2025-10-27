@@ -71,9 +71,29 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             // todo: sqlite authentication here
-            // Proceed to HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
+            val dbHelper = DatabaseHelper(this)
+            val cursor = dbHelper.getUser(phone)
+            if (cursor.moveToFirst()) {
+                val storedPassword =
+                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_USER_PASSWORD))
+
+                if (storedPassword == password) {
+                    Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+
+                    /*// Save user session
+                    val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
+                    prefs.edit().putString("USER_PHONE", phone).apply()*/
+
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    //finish()
+                } else {
+                    Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show()
+                }
+            }
+            else {
+                Toast.makeText(this, "User not found. Please sign up first.", Toast.LENGTH_SHORT).show()
+            }
         }
 
 

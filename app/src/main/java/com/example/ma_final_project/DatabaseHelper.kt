@@ -6,11 +6,12 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DatabaseHelper(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "EmergencyApp.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2 // incremented because of schema change
 
         // Table: User Profile
         const val TABLE_USER = "UserProfile"
@@ -26,12 +27,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COL_CONTACT_FIRSTNAME = "firstname"
         const val COL_CONTACT_LASTNAME = "lastname"
         const val COL_CONTACT_PHONE = "phone"
+        const val COL_CONTACT_USER_PHONE = "user_phone"
 
         // Table: Safe Locations
         const val TABLE_LOCATIONS = "SafeLocations"
         const val COL_LOCATION_ID = "id"
         const val COL_LOCATION_NAME = "name"
         const val COL_LOCATION_ADDRESS = "address"
+        const val COL_LOCATION_USER_PHONE = "user_phone"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -47,36 +50,40 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         """.trimIndent()
         db?.execSQL(createUserTable)
 
-        // Create Emergency Contacts Table
+        // Create Emergency Contacts Table (linked to user)
         val createContactsTable = """
             CREATE TABLE $TABLE_CONTACTS (
                 $COL_CONTACT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COL_CONTACT_FIRSTNAME TEXT,
                 $COL_CONTACT_LASTNAME TEXT,
-                $COL_CONTACT_PHONE TEXT
+                $COL_CONTACT_PHONE TEXT,
+                $COL_CONTACT_USER_PHONE TEXT,
+                FOREIGN KEY($COL_CONTACT_USER_PHONE) REFERENCES $TABLE_USER($COL_USER_PHONE)
             )
         """.trimIndent()
         db?.execSQL(createContactsTable)
 
-        // Create Safe Locations Table
+        // Create Safe Locations Table (linked to user)
         val createLocationsTable = """
             CREATE TABLE $TABLE_LOCATIONS (
                 $COL_LOCATION_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COL_LOCATION_NAME TEXT,
-                $COL_LOCATION_ADDRESS TEXT
+                $COL_LOCATION_ADDRESS TEXT,
+                $COL_LOCATION_USER_PHONE TEXT,
+                FOREIGN KEY($COL_LOCATION_USER_PHONE) REFERENCES $TABLE_USER($COL_USER_PHONE)
             )
         """.trimIndent()
         db?.execSQL(createLocationsTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS $TABLE_USER")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_CONTACTS")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_LOCATIONS")
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_USER")
         onCreate(db)
     }
-//--------------------------------------------------------------Users------------------------------------------------------------------------------------
-    // Insert a new user
+
+    // --------------------------------------------------- USER METHODS ---------------------------------------------------
     fun addUser(firstname: String, lastname: String, phone: String, email: String, password: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -89,13 +96,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.insert(TABLE_USER, null, values)
     }
 
-    // Read user by phone
     fun getUser(phone: String): Cursor {
         val db = readableDatabase
         return db.query(TABLE_USER, null, "$COL_USER_PHONE=?", arrayOf(phone), null, null, null)
     }
 
-    // Update user
     fun updateUser(firstname: String, lastname: String, email: String, password: String, phone: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -107,31 +112,28 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.update(TABLE_USER, values, "$COL_USER_PHONE=?", arrayOf(phone))
     }
 
-    // Delete user
     fun deleteUser(phone: String): Int {
         val db = writableDatabase
         return db.delete(TABLE_USER, "$COL_USER_PHONE=?", arrayOf(phone))
     }
 
-//--------------------------------------------------------------Emergency Contacts--------------------------------------------------------------------------------
-    // Insert an emergency contact
-    fun addContact(firstname: String, lastname: String, phone: String): Long {
+    // --------------------------------------------------- CONTACT METHODS ---------------------------------------------------
+    fun addContact(userPhone: String, firstname: String, lastname: String, phone: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COL_CONTACT_FIRSTNAME, firstname)
             put(COL_CONTACT_LASTNAME, lastname)
             put(COL_CONTACT_PHONE, phone)
+            put(COL_CONTACT_USER_PHONE, userPhone)
         }
         return db.insert(TABLE_CONTACTS, null, values)
     }
 
-    // Read contact by ID
-    fun getContact(id: Int): Cursor {
+    fun getContactsForUser(userPhone: String): Cursor {
         val db = readableDatabase
-        return db.query(TABLE_CONTACTS, null, "$COL_CONTACT_ID=?", arrayOf(id.toString()), null, null, null)
+        return db.query(TABLE_CONTACTS, null, "$COL_CONTACT_USER_PHONE=?", arrayOf(userPhone), null, null, null)
     }
 
-    // Update contact
     fun updateContact(id: Int, firstname: String, lastname: String, phone: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -142,30 +144,27 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.update(TABLE_CONTACTS, values, "$COL_CONTACT_ID=?", arrayOf(id.toString()))
     }
 
-    // Delete contact
     fun deleteContact(id: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_CONTACTS, "$COL_CONTACT_ID=?", arrayOf(id.toString()))
     }
 
-//-------------------------------------------------------------------------Safe Locations---------------------------------------------------------------------------
-    // Insert a safe location
-    fun addLocation(name: String, address: String): Long {
+    // --------------------------------------------------- LOCATION METHODS ---------------------------------------------------
+    fun addLocation(userPhone: String, name: String, address: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COL_LOCATION_NAME, name)
             put(COL_LOCATION_ADDRESS, address)
+            put(COL_LOCATION_USER_PHONE, userPhone)
         }
         return db.insert(TABLE_LOCATIONS, null, values)
     }
 
-    // Read location by ID
-    fun getLocation(id: Int): Cursor {
+    fun getLocationsForUser(userPhone: String): Cursor {
         val db = readableDatabase
-        return db.query(TABLE_LOCATIONS, null, "$COL_LOCATION_ID=?", arrayOf(id.toString()), null, null, null)
+        return db.query(TABLE_LOCATIONS, null, "$COL_LOCATION_USER_PHONE=?", arrayOf(userPhone), null, null, null)
     }
 
-    // Update location
     fun updateLocation(id: Int, name: String, address: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -175,10 +174,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.update(TABLE_LOCATIONS, values, "$COL_LOCATION_ID=?", arrayOf(id.toString()))
     }
 
-    // Delete location
     fun deleteLocation(id: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_LOCATIONS, "$COL_LOCATION_ID=?", arrayOf(id.toString()))
     }
-
 }

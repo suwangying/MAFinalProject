@@ -138,11 +138,34 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             // TODO: Save user to SQLite or Firebase
+            val dbHelper = DatabaseHelper(this)
 
-            Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            // Check if phone already exists
+            val cursor = dbHelper.getUser(phone)
+            if (cursor.moveToFirst()) {
+                Toast.makeText(this, "Phone number already registered", Toast.LENGTH_SHORT).show()
+                cursor.close()
+                return@setOnClickListener
+            }
+            cursor.close()
+
+            // Insert user into database
+            val result = dbHelper.addUser(firstName, lastName, phone, email, password)
+
+            if (result != -1L) {
+                Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show()
+
+                // Save user session immediately (optional)
+                val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
+                prefs.edit().putString("USER_PHONE", phone).apply()
+
+                // Redirect to MainActivity
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "Error creating account. Please try again.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
