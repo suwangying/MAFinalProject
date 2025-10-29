@@ -40,7 +40,6 @@ class HomeActivity : AppCompatActivity() {
         val btnSafeLocations = findViewById<Button>(R.id.btnSafeLocations)
         val btnProfile = findViewById<Button>(R.id.btnProfile)
         val btnBack = findViewById<Button>(R.id.btnBack)
-        val btnLogout = findViewById<Button>(R.id.btnLogout)
         val btnFakeCall = findViewById<Button>(R.id.btnFakeCall)
 
         // Back Button
@@ -51,20 +50,15 @@ class HomeActivity : AppCompatActivity() {
             sendAfterPermissions("button")
         }
 
+        btnProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
         // (your other buttons unchanged)
         btnContacts.setOnClickListener { /* startActivity(Intent(...)) */ }
         btnSafeLocations.setOnClickListener { /* startActivity(Intent(...)) */ }
-        btnProfile.setOnClickListener { /* startActivity(Intent(...)) */ }
 
-        btnLogout.setOnClickListener {
-            val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
-            prefs.edit().clear().apply() // Clear user session
-
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-        }
 
         // request early so first tap/shake can work immediately
         requestDangerousPermissionsIfNeeded()
