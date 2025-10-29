@@ -22,6 +22,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         etNewPassword = findViewById(R.id.etNewPassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
         btnReset = findViewById(R.id.btnReset)
+        val dbHelper = DatabaseHelper(this)
 
         etPhone.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
@@ -72,10 +73,28 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // todo: Add SQLite Authentication to check phone number
+            // Check if user exists
+            val cursor = dbHelper.getUser(phone)
+            if (!cursor.moveToFirst()) {
+                Toast.makeText(this, "No user found with this phone number", Toast.LENGTH_SHORT).show()
+                cursor.close()
+                return@setOnClickListener
+            }
 
-            Toast.makeText(this, "Password reset successful!", Toast.LENGTH_SHORT).show()
-            finish() // Go back to Login
+            // Get existing firstName, lastName, email to keep them unchanged
+            val firstName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_USER_FIRSTNAME))
+            val lastName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_USER_LASTNAME))
+            val email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_USER_EMAIL))
+            cursor.close()
+
+            // Update user password
+            val updated = dbHelper.updateUserExceptPhone(firstName, lastName, email, newPassword, phone)
+            if (updated > 0) {
+                Toast.makeText(this, "Password reset successful!", Toast.LENGTH_SHORT).show()
+                finish() // Go back to Login
+            } else {
+                Toast.makeText(this, "Failed to reset password", Toast.LENGTH_SHORT).show()
+            }
 
         }
 
