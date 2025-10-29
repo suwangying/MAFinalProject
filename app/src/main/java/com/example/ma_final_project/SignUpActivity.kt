@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.widget.ImageView
 import com.example.ma_final_project.utils.ValidationUtils
 
 class SignUpActivity : AppCompatActivity() {
@@ -17,6 +18,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var etConfirmPassword: EditText
     private lateinit var btnSignUp: Button
+    private lateinit var backIcon: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,7 @@ class SignUpActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
         btnSignUp = findViewById(R.id.btnSignUp)
+        backIcon=findViewById(R.id.backIcon)
 
 
         etFirstName.setOnFocusChangeListener { _, hasFocus ->
@@ -166,6 +169,13 @@ class SignUpActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Error creating account. Please try again.", Toast.LENGTH_SHORT).show()
             }
+
+
+            }
+
+            backIcon.setOnClickListener {
+                finish()
         }
+
     }
 }
