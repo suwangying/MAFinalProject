@@ -7,7 +7,6 @@ import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ma_final_project.utils.ValidationUtils
-//testing
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
@@ -124,16 +123,27 @@ class ProfileActivity : AppCompatActivity() {
                         Toast.makeText(this, "Phone must be 10 digits", Toast.LENGTH_SHORT).show()
                         false
                     } else {
-                        val updated = dbHelper.updatePhone(phone, newValue) > 0
-                        if (updated) {
-                            // Update SharedPreferences
-                            currentPhone = newValue
-                            val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
-                            prefs.edit().putString("USER_PHONE", newValue).apply()
+                        // Check if new phone already exists
+                        val cursorCheck = dbHelper.getUser(newValue)
+                        val exists = cursorCheck.moveToFirst()
+                        cursorCheck.close()
+
+                        if (exists) {
+                            Toast.makeText(this, "Phone number already exists", Toast.LENGTH_SHORT).show()
+                            false
+                        } else {
+                            // Update phone
+                            val updated = dbHelper.updatePhone(phone, newValue) > 0
+                            if (updated) {
+                                currentPhone = newValue
+                                val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
+                                prefs.edit().putString("USER_PHONE", newValue).apply()
+                            }
+                            updated
                         }
-                        updated
                     }
                 }
+
                 "Email" -> {
                     if (newValue.isNotEmpty() && !ValidationUtils.isValidEmail(newValue)) {
                         Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show()
