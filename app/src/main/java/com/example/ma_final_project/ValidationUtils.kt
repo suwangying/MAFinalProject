@@ -3,9 +3,9 @@ package com.example.ma_final_project.utils
 object ValidationUtils {
 
     fun isValidName(name: String): Boolean {
-        // Regex: starts with capital letter, followed by lowercase letters only, at least 1 char
-        val regex = "^[A-Z][a-z]{1,}$".toRegex()
-        return regex.matches(name)
+        // Each part: Capital + >=1 lowercase. Parts separated by space or hyphen.
+        val regex = """^[\p{Lu}][\p{Ll}]{1,}(?:[ -][\p{Lu}][\p{Ll}]{1,})*$""".toRegex()
+        return regex.matches(name.trim())
     }
 
     // Validate phone number: exactly 10 digits
