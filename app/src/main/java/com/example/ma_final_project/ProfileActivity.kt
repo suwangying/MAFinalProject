@@ -7,7 +7,7 @@ import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ma_final_project.utils.ValidationUtils
-
+//testing
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
