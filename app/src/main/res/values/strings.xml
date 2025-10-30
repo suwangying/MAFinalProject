@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MA_Final_Project</string>
+    <string name="fake_video_call">Fake video call</string>
+    <string name="fake_voice_message">Fake voice message</string>
+    <string name="playing_voice">Playing voice message…</string>
+
 </resources>

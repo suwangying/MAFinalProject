@@ -36,7 +36,13 @@ android {
 }
 
 dependencies {
-
+    val camerax = "1.3.4"
+    implementation ("androidx.camera:camera-core:$camerax")
+    implementation ("androidx.camera:camera-camera2:$camerax")
+    implementation ("androidx.camera:camera-lifecycle:$camerax")
+    implementation ("androidx.camera:camera-view:$camerax")
+    implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.19.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

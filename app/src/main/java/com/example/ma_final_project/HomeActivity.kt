@@ -11,8 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
+import android.widget.PopupMenu
 
 class HomeActivity : AppCompatActivity() {
+    companion object {
+        private const val ID_FAKE_VIDEO = 1
+        private const val ID_FAKE_VOICE = 2
+    }
     private lateinit var sosManager: SosManager
     private lateinit var shakeDetector: ShakeDetector
     private val emergencyNumber = "+14167046052"  // replace with your own
@@ -62,6 +67,28 @@ class HomeActivity : AppCompatActivity() {
 
         // request early so first tap/shake can work immediately
         requestDangerousPermissionsIfNeeded()
+
+        btnFakeCall.setOnClickListener { anchor ->
+            val popup = PopupMenu(this, anchor).apply {
+                menu.add(0, ID_FAKE_VIDEO, 0, getString(R.string.fake_video_call))
+                menu.add(0, ID_FAKE_VOICE, 1, getString(R.string.fake_voice_message))
+
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        ID_FAKE_VIDEO -> {
+                            startActivity(Intent(this@HomeActivity, FakeVideoCallActivity::class.java))
+                            true
+                        }
+                        ID_FAKE_VOICE -> {
+                            Toast.makeText(this@HomeActivity, getString(R.string.playing_voice), Toast.LENGTH_SHORT).show()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            }
+            popup.show()
+        }
     }
 
     override fun onResume() {
