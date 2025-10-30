@@ -62,6 +62,7 @@ class FakeVideoCallActivity : AppCompatActivity() {
         tvTimer = findViewById(R.id.tvTimer)
         btnEnd = findViewById(R.id.btnEnd)
         btnSpeaker = findViewById(R.id.btnSpeaker)
+        selfPreview = findViewById(R.id.selfPreview)
 
         enableDrag(selfPreview)
 
@@ -95,6 +96,7 @@ class FakeVideoCallActivity : AppCompatActivity() {
     }
 
     private fun startSelfPreview() {
+        // we want portrait-ish preview, let CameraX handle rotation
         selfPreview.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         selfPreview.scaleType = PreviewView.ScaleType.FILL_CENTER
         selfPreview.bringToFront()
@@ -102,19 +104,28 @@ class FakeVideoCallActivity : AppCompatActivity() {
         val providerFuture = ProcessCameraProvider.getInstance(this)
         providerFuture.addListener({
             val provider = providerFuture.get()
+
             val preview = Preview.Builder()
-                .setTargetResolution(Size(720, 1080))
                 .setTargetRotation(selfPreview.display.rotation)
                 .build().also {
                     it.setSurfaceProvider(selfPreview.surfaceProvider)
                 }
+
             try {
                 provider.unbindAll()
-                provider.bindToLifecycle(this, CameraSelector.DEFAULT_FRONT_CAMERA, preview)
-                selfPreview.alpha = 1f
+                provider.bindToLifecycle(
+                    this,
+                    CameraSelector.DEFAULT_FRONT_CAMERA,
+                    preview
+                )
             } catch (e: Exception) {
-                selfPreview.alpha = 0.8f
-                tvCallerName.text = "Front camera unavailable"
+                // fallback to back camera if front fails
+                provider.unbindAll()
+                provider.bindToLifecycle(
+                    this,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    preview
+                )
             }
         }, ContextCompat.getMainExecutor(this))
     }
