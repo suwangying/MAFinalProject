@@ -101,7 +101,7 @@ class DatabaseHelper(context: Context) :
         return db.query(TABLE_USER, null, "$COL_USER_PHONE=?", arrayOf(phone), null, null, null)
     }
 
-    fun updateUser(firstname: String, lastname: String, email: String, password: String, phone: String): Int {
+    fun updateUserExceptPhone(firstname: String, lastname: String, email: String, password: String, oldPhone: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COL_USER_FIRSTNAME, firstname)
@@ -109,8 +109,17 @@ class DatabaseHelper(context: Context) :
             put(COL_USER_EMAIL, email)
             put(COL_USER_PASSWORD, password)
         }
-        return db.update(TABLE_USER, values, "$COL_USER_PHONE=?", arrayOf(phone))
+        return db.update(TABLE_USER, values, "$COL_USER_PHONE=?", arrayOf(oldPhone))
     }
+
+    fun updatePhone(oldPhone: String, newPhone: String): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COL_USER_PHONE, newPhone)
+        }
+        return db.update(TABLE_USER, values, "$COL_USER_PHONE=?", arrayOf(oldPhone))
+    }
+
 
     fun deleteUser(phone: String): Int {
         val db = writableDatabase
