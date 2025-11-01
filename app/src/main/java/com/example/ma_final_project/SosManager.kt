@@ -11,7 +11,7 @@ class SosManager(
     private val fusedLocationClient: FusedLocationProviderClient,
     private val emergencyNumber: String
 ) {
-    /** Same behavior you had: try lastLocation; fallback to no-location message. */
+    
     fun triggerSOS(reason: String = "button") {
         try {
             fusedLocationClient.lastLocation
