@@ -24,11 +24,6 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 import java.util.concurrent.Executors
 import android.view.View
 import android.view.MotionEvent
-import android.util.Size
-
-
-
-import kotlin.random.Random
 
 class FakeVideoCallActivity : AppCompatActivity() {
 
@@ -84,7 +79,7 @@ class FakeVideoCallActivity : AppCompatActivity() {
         playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
         playerView.setShowBuffering(StyledPlayerView.SHOW_BUFFERING_WHEN_PLAYING)
 
-        val uri = RawResourceDataSource.buildRawResourceUri(R.raw.caller_a)
+        val uri = RawResourceDataSource.buildRawResourceUri(R.raw.caller_b)
 
         player = ExoPlayer.Builder(this).build().also { p ->
             playerView.player = p
