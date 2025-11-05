@@ -61,7 +61,10 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // (your other buttons unchanged)
-        btnContacts.setOnClickListener { /* startActivity(Intent(...)) */ }
+        btnContacts.setOnClickListener {
+            val intent = Intent(this, ContactsActivity::class.java)
+            startActivity(intent)
+        /* startActivity(Intent(...)) */ }
         btnSafeLocations.setOnClickListener { /* startActivity(Intent(...)) */ }
 
        /* // Manage Contacts Page
