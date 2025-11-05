@@ -62,10 +62,13 @@ class FakeVideoCallActivity : AppCompatActivity() {
         enableDrag(selfPreview)
 
 
-        tvCallerName.text = randomCallerName()
-        setupSpeaker(true)             // start on speaker
-        setupRemoteVideo()             // play the “other person”
-        startTimer()                   // 00:00 → …
+        val caller = intent.getStringExtra("caller_name")
+        tvCallerName.text = if (caller.isNullOrBlank()) "Ava (Video)" else "$caller (Video)"
+
+        setupSpeaker(true)
+        setupRemoteVideo()
+        startSelfPreview()
+        startTimer()
         requestCamera()
         wireClicks()
     }

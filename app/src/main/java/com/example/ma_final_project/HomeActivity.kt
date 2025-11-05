@@ -64,6 +64,12 @@ class HomeActivity : AppCompatActivity() {
         btnContacts.setOnClickListener { /* startActivity(Intent(...)) */ }
         btnSafeLocations.setOnClickListener { /* startActivity(Intent(...)) */ }
 
+       /* // Manage Contacts Page
+        btnContacts.setOnClickListener {
+            val intent = Intent(this, ContactsActivity::class.java)
+            startActivity(intent)
+        }*/
+
 
         // request early so first tap/shake can work immediately
         requestDangerousPermissionsIfNeeded()
@@ -76,13 +82,14 @@ class HomeActivity : AppCompatActivity() {
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         ID_FAKE_VIDEO -> {
-                            startActivity(Intent(this@HomeActivity, FakeVideoCallActivity::class.java))
+                            startActivity(Intent(this@HomeActivity, IncomingCallActivity::class.java))
                             true
                         }
                         ID_FAKE_VOICE -> {
-                            Toast.makeText(this@HomeActivity, getString(R.string.playing_voice), Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@HomeActivity, IncomingVoiceActivity::class.java))
                             true
                         }
+
                         else -> false
                     }
                 }
