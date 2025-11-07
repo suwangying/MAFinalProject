@@ -32,7 +32,13 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         val fused = LocationServices.getFusedLocationProviderClient(this)
-        sosManager = SosManager(this, fused, emergencyNumber)
+        val db = DatabaseHelper(this)
+        sosManager = SosManager(
+            context = this,
+            fusedLocationClient = fused,
+            fallbackNumber = emergencyNumber,
+            dbHelper = db
+        )
 
         // initialize the shake detector
         shakeDetector = ShakeDetector(this) {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,8 @@ class ContactsActivity : AppCompatActivity() {
     private lateinit var rvContacts: RecyclerView
     private lateinit var btnAddContact: Button
     private lateinit var adapter: ContactAdapter
+
+    private lateinit var backButton: ImageView
     private var currentPhone: String? = null
     private val contactList = mutableListOf<Contact>()
 
@@ -31,6 +34,7 @@ class ContactsActivity : AppCompatActivity() {
         dbHelper = DatabaseHelper(this)
         rvContacts = findViewById(R.id.rvContacts)
         btnAddContact = findViewById(R.id.btnAddContact)
+        backButton=findViewById(R.id.backButton)
 
         currentPhone = getSharedPreferences("UserSession", MODE_PRIVATE)
             .getString("USER_PHONE", null)
@@ -43,6 +47,9 @@ class ContactsActivity : AppCompatActivity() {
 
         btnAddContact.setOnClickListener {
             showContactDialog(null)
+        }
+        backButton.setOnClickListener {
+            finish()
         }
     }
 
@@ -97,6 +104,7 @@ class ContactsActivity : AppCompatActivity() {
                     Toast.makeText(this, "Phone must be 10 digits", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
+
 
                 // Check for duplicate phone (only when adding new contact or changing phone)
                 val cursor = dbHelper.getContactsForUser(currentPhone!!)
