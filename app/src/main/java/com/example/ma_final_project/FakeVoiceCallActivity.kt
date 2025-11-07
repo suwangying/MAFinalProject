@@ -44,7 +44,7 @@ class FakeVoiceCallActivity : AppCompatActivity() {
 
     private fun playSingleClip() {
         // your one clip here:
-        val resId = R.raw.voice_call
+        val resId = R.raw.call_message
 
         stopVoice()
         player = MediaPlayer.create(this, resId)
