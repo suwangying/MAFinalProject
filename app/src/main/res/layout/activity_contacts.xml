@@ -5,56 +5,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:padding="16dp">
 
     <!-- Title -->
+
     <TextView
         android:id="@+id/tvContactsTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Emergency Contacts"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_width="330dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="Emergency Contacts"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.816"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- RecyclerView for contacts -->
-
-    <!-- Add contact button -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvContacts"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="332dp"
+        android:layout_height="456dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/btnAddContact"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvContactsTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.622" />
 
     <Button
         android:id="@+id/btnAddContact"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/colorButton"
         android:text="Add Contact"
+        android:textColor="@color/colorTextPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/backButton"
-        android:layout_width="53dp"
-        android:layout_height="53dp"
+        android:layout_width="58dp"
+        android:layout_height="50dp"
         android:layout_marginStart="2dp"
         android:layout_marginTop="11dp"
         android:layout_marginBottom="5dp"
+        android:background="@color/black"
+        android:textColor="@color/colorTextPrimary"
         app:layout_constraintBottom_toTopOf="@+id/rvContacts"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.761"
+        app:layout_constraintVertical_bias="0.853"
         app:srcCompat="@drawable/back_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

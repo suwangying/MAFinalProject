@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Primary app colors -->
+    <color name="colorBackground">#212121</color> <!-- Dark gray background -->
+    <color name="colorButton">#757575</color>     <!-- Grey for secondary buttons -->
+    <color name="colorSOS">#D32F2F</color>       <!-- Red for SOS button -->
+    <color name="colorTextPrimary">#FFFFFF</color> <!-- White text on dark backgrounds -->
+    <color name="colorTextSecondary">#BDBDBD</color> <!-- Light gray text for secondary info -->
+
+    <!-- Optional accents -->
+    <color name="colorDisabled">#9E9E9E</color> <!-- Disabled buttons / hints -->
+
 </resources>
