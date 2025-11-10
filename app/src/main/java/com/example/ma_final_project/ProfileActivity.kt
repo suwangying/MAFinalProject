@@ -18,6 +18,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tvEditEmail: TextView
     private lateinit var btnChangePassword: Button
     private lateinit var btnDeleteAccount: Button
+    private lateinit var backIcon: ImageView
     private var currentPhone: String? = null  // Logged-in user
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,7 @@ class ProfileActivity : AppCompatActivity() {
         tvEditEmail = findViewById(R.id.tvEditEmail)
         btnChangePassword = findViewById(R.id.btnChangePassword)
         btnDeleteAccount = findViewById(R.id.btnDeleteAccount)
+        backIcon = findViewById(R.id.backIcon2)
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
         val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
@@ -54,6 +56,10 @@ class ProfileActivity : AppCompatActivity() {
         btnChangePassword.setOnClickListener { showChangePasswordDialog() }
 
         btnDeleteAccount.setOnClickListener { confirmDeleteAccount() }
+
+        backIcon.setOnClickListener {
+            finish()
+        }
 
         btnLogout.setOnClickListener {
             val prefs = getSharedPreferences("UserSession", MODE_PRIVATE)
