@@ -70,14 +70,19 @@ class HomeActivity : AppCompatActivity() {
         btnContacts.setOnClickListener {
             val intent = Intent(this, ContactsActivity::class.java)
             startActivity(intent)
-        /* startActivity(Intent(...)) */ }
-        btnSafeLocations.setOnClickListener { /* startActivity(Intent(...)) */ }
+            /* startActivity(Intent(...)) */ }
 
-       /* // Manage Contacts Page
-        btnContacts.setOnClickListener {
-            val intent = Intent(this, ContactsActivity::class.java)
+        // ✅ Added Manage Safe Locations button action
+        btnSafeLocations.setOnClickListener {
+            val intent = Intent(this, ManageSafeLocationsActivity::class.java)
             startActivity(intent)
-        }*/
+        }
+
+        /* // Manage Contacts Page
+         btnContacts.setOnClickListener {
+             val intent = Intent(this, ContactsActivity::class.java)
+             startActivity(intent)
+         }*/
 
 
         // request early so first tap/shake can work immediately
@@ -173,8 +178,7 @@ class HomeActivity : AppCompatActivity() {
 
             val denied = permissions.indices.filter { grantResults[it] != PackageManager.PERMISSION_GRANTED }
             if (denied.isNotEmpty()) {
-                Toast.makeText(this, "Some permissions denied: $denied", Toast.LENGTH_SHORT).show()
-            }
+                Toast.makeText(this, "Some permissions denied: $denied", Toast.LENGTH_SHORT).show() }
         }
     }
 }

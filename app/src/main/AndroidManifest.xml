@@ -3,16 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Permissions needed for emergency features -->
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,6 +34,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MA_Final_Project">
+        <activity
+            android:name=".AddSafeLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageSafeLocationsActivity"
+            android:exported="false" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
@@ -39,8 +57,8 @@
             android:exported="false" />
         <activity
             android:name=".FakeVideoCallActivity"
-            android:screenOrientation="portrait"
-            android:exported="false"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".IncomingCallActivity"
             android:exported="false"
@@ -49,13 +67,10 @@
             android:name=".IncomingVoiceActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".FakeVoiceCallActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -11,7 +11,7 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "EmergencyApp.db"
-        private const val DATABASE_VERSION = 2 // incremented because of schema change
+        private const val DATABASE_VERSION = 3 // incremented because of schema change
 
         // Table: User Profile
         const val TABLE_USER = "UserProfile"
@@ -35,6 +35,9 @@ class DatabaseHelper(context: Context) :
         const val COL_LOCATION_NAME = "name"
         const val COL_LOCATION_ADDRESS = "address"
         const val COL_LOCATION_USER_PHONE = "user_phone"
+        const val COL_LOCATION_LAT = "latitude"
+        const val COL_LOCATION_LNG = "longitude"
+
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -70,6 +73,8 @@ class DatabaseHelper(context: Context) :
                 $COL_LOCATION_NAME TEXT,
                 $COL_LOCATION_ADDRESS TEXT,
                 $COL_LOCATION_USER_PHONE TEXT,
+                $COL_LOCATION_LAT REAL,
+                $COL_LOCATION_LNG REAL,
                 FOREIGN KEY($COL_LOCATION_USER_PHONE) REFERENCES $TABLE_USER($COL_USER_PHONE)
             )
         """.trimIndent()
@@ -158,12 +163,14 @@ class DatabaseHelper(context: Context) :
         return db.delete(TABLE_CONTACTS, "$COL_CONTACT_ID=?", arrayOf(id.toString()))
     }
 
-    // --------------------------------------------------- LOCATION METHODS ---------------------------------------------------
-    fun addLocation(userPhone: String, name: String, address: String): Long {
+    // -------------------------------------------------- LOCATION METHODS ---------------------------------------------------
+    fun addLocation(userPhone: String, name: String, address: String, lat: Double, lng: Double): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COL_LOCATION_NAME, name)
             put(COL_LOCATION_ADDRESS, address)
+            put(COL_LOCATION_LAT, lat)
+            put(COL_LOCATION_LNG, lng)
             put(COL_LOCATION_USER_PHONE, userPhone)
         }
         return db.insert(TABLE_LOCATIONS, null, values)
@@ -174,17 +181,19 @@ class DatabaseHelper(context: Context) :
         return db.query(TABLE_LOCATIONS, null, "$COL_LOCATION_USER_PHONE=?", arrayOf(userPhone), null, null, null)
     }
 
-    fun updateLocation(id: Int, name: String, address: String): Int {
+    fun deleteLocation(id: Int): Int {
+        val db = writableDatabase
+        return db.delete(TABLE_LOCATIONS, "$COL_LOCATION_ID=?", arrayOf(id.toString()))
+    }
+
+    fun updateLocation(id: Int, name: String, address: String, lat: Double, lng: Double): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COL_LOCATION_NAME, name)
             put(COL_LOCATION_ADDRESS, address)
+            put(COL_LOCATION_LAT, lat)
+            put(COL_LOCATION_LNG, lng)
         }
         return db.update(TABLE_LOCATIONS, values, "$COL_LOCATION_ID=?", arrayOf(id.toString()))
-    }
-
-    fun deleteLocation(id: Int): Int {
-        val db = writableDatabase
-        return db.delete(TABLE_LOCATIONS, "$COL_LOCATION_ID=?", arrayOf(id.toString()))
     }
 }

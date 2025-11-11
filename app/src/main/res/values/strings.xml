@@ -3,5 +3,13 @@
     <string name="fake_video_call">Fake video call</string>
     <string name="fake_voice_message">Fake voice message</string>
     <string name="playing_voice">Playing voice message…</string>
+    <string name="title_activity_manage_safe_locations">ManageSafeLocationsActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_add_safe_location">AddSafeLocationActivity</string>
+    <string name="no_safe_locations">No Safe Locations Added Yet</string>
+    <!-- %1$s = name, %2$s = address -->
+    <string name="safe_location_item">🏠 %1$s\n📍 %2$s</string>
+
 
 </resources>

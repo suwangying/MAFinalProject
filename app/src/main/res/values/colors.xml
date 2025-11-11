@@ -2,14 +2,25 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <!-- Primary app colors -->
     <color name="colorBackground">#212121</color> <!-- Dark gray background -->
     <color name="colorButton">#757575</color>     <!-- Grey for secondary buttons -->
-    <color name="colorSOS">#D32F2F</color>       <!-- Red for SOS button -->
+    <color name="colorSOS">#D32F2F</color>        <!-- Red for SOS button -->
     <color name="colorTextPrimary">#FFFFFF</color> <!-- White text on dark backgrounds -->
     <color name="colorTextSecondary">#BDBDBD</color> <!-- Light gray text for secondary info -->
 
     <!-- Optional accents -->
-    <color name="colorDisabled">#9E9E9E</color> <!-- Disabled buttons / hints -->
+    <color name="colorDisabled">#9E9E9E</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color> <!-- Disabled buttons / hints -->
 
+    <!-- ✅ Added for AddSafeLocation layout +rounded background -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="colorHint">#9E9E9E</color> <!-- Used for EditText hint -->
 </resources>
