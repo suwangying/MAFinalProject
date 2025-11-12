@@ -20,7 +20,7 @@ class HomeActivity : AppCompatActivity() {
     }
     private lateinit var sosManager: SosManager
     private lateinit var shakeDetector: ShakeDetector
-    private val emergencyNumber = "+14167046052"  // replace with your own
+    private val emergencyNumber = "+14167046052"
     private val REQUEST_PERMS = 100
 
     // if we asked for permission mid-flow, remember why we wanted to send
@@ -42,7 +42,6 @@ class HomeActivity : AppCompatActivity() {
 
         // initialize the shake detector
         shakeDetector = ShakeDetector(this) {
-            // this lambda runs whenever a shake is detected
             sendAfterPermissions("shake")
         }
 

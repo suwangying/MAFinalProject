@@ -94,7 +94,7 @@ class FakeVideoCallActivity : AppCompatActivity() {
     }
 
     private fun startSelfPreview() {
-        // we want portrait-ish preview, let CameraX handle rotation
+
         selfPreview.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         selfPreview.scaleType = PreviewView.ScaleType.FILL_CENTER
         selfPreview.bringToFront()
