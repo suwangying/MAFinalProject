@@ -51,6 +51,12 @@ class HomeActivity : AppCompatActivity() {
         val btnProfile = findViewById<Button>(R.id.btnProfile)
         val btnBack = findViewById<Button>(R.id.btnBack)
         val btnFakeCall = findViewById<Button>(R.id.btnFakeCall)
+        val btnPhotoCapture = findViewById<Button>(R.id.btnPhotoCapture)
+
+        btnPhotoCapture.setOnClickListener {
+            startActivity(Intent(this, PhotoCaptureActivity::class.java))
+        }
+
 
         // Back Button
         btnBack.setOnClickListener { finish() }

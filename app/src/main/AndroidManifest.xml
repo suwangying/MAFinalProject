@@ -34,6 +34,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MA_Final_Project">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".AddSafeLocationActivity"
             android:exported="false" />
@@ -71,6 +81,8 @@
             android:name=".FakeVoiceCallActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity android:name=".PhotoCaptureActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
