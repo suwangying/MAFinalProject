@@ -36,6 +36,19 @@
         app:layout_constraintEnd_toStartOf="@id/btnEdit"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <!-- Call Button -->
+    <ImageButton
+        android:id="@+id/btnCall"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:contentDescription="Call Contact"
+        android:src="@drawable/ic_call"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnEdit"
+        app:tint="@color/colorSOS" />
+
     <!-- Edit Button -->
     <ImageButton
         android:id="@+id/btnEdit"

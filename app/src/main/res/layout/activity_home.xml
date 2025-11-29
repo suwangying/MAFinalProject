@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:backgroundTint="@color/colorDisabled"
-        android:text="Manage Emergency Contacts"
+        android:text="Manage/Call Emergency Contacts"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"

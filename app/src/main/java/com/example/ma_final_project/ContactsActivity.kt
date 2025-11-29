@@ -26,6 +26,8 @@ class ContactsActivity : AppCompatActivity() {
     private var currentPhone: String? = null
     private val contactList = mutableListOf<Contact>()
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -145,6 +147,7 @@ class ContactsActivity : AppCompatActivity() {
             val tvPhone: TextView = view.findViewById(R.id.tvContactPhone)
             val btnEdit: ImageButton = view.findViewById(R.id.btnEdit)
             val btnDelete: ImageButton = view.findViewById(R.id.btnDelete)
+            val btnCall: ImageButton = view.findViewById(R.id.btnCall)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -170,6 +173,21 @@ class ContactsActivity : AppCompatActivity() {
                         dbHelper.deleteContact(contact.id)
                         Toast.makeText(this@ContactsActivity, "Contact deleted", Toast.LENGTH_SHORT).show()
                         loadContacts()
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+
+            holder.btnCall.setOnClickListener {
+                // Show confirmation dialog before calling
+                AlertDialog.Builder(this@ContactsActivity)
+                    .setTitle("Call Contact")
+                    .setMessage("Do you want to call ${contact.firstname} ${contact.lastname}?")
+                    .setPositiveButton("Call") { _, _ ->
+                        // Use ACTION_DIAL so user can see the number
+                        val intent = android.content.Intent(android.content.Intent.ACTION_DIAL)
+                        intent.data = android.net.Uri.parse("tel:${contact.phone}")
+                        holder.itemView.context.startActivity(intent)
                     }
                     .setNegativeButton("Cancel", null)
                     .show()
