@@ -77,17 +77,13 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
             /* startActivity(Intent(...)) */ }
 
-        // ✅ Added Manage Safe Locations button action
+        // Added Manage Safe Locations button action
         btnSafeLocations.setOnClickListener {
             val intent = Intent(this, ManageSafeLocationsActivity::class.java)
             startActivity(intent)
         }
 
-        /* // Manage Contacts Page
-         btnContacts.setOnClickListener {
-             val intent = Intent(this, ContactsActivity::class.java)
-             startActivity(intent)
-         }*/
+
 
 
         // request early so first tap/shake can work immediately
