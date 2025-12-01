@@ -88,7 +88,6 @@ class DatabaseHelper(context: Context) :
         onCreate(db)
     }
 
-    // --------------------------------------------------- USER METHODS ---------------------------------------------------
     fun addUser(firstname: String, lastname: String, phone: String, email: String, password: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -105,7 +104,7 @@ class DatabaseHelper(context: Context) :
         val db = readableDatabase
         return db.query(TABLE_USER, null, "$COL_USER_PHONE=?", arrayOf(phone), null, null, null)
     }
-
+    // Update all user fields EXCEPT the phone number
     fun updateUserExceptPhone(firstname: String, lastname: String, email: String, password: String, oldPhone: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -116,7 +115,7 @@ class DatabaseHelper(context: Context) :
         }
         return db.update(TABLE_USER, values, "$COL_USER_PHONE=?", arrayOf(oldPhone))
     }
-
+    // Change the user's phone number (this is the primary key)
     fun updatePhone(oldPhone: String, newPhone: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -125,13 +124,12 @@ class DatabaseHelper(context: Context) :
         return db.update(TABLE_USER, values, "$COL_USER_PHONE=?", arrayOf(oldPhone))
     }
 
-
+    // Delete user profile row from DB (used for full account deletion)
     fun deleteUser(phone: String): Int {
         val db = writableDatabase
         return db.delete(TABLE_USER, "$COL_USER_PHONE=?", arrayOf(phone))
     }
-
-    // --------------------------------------------------- CONTACT METHODS ---------------------------------------------------
+    // Add a new emergency contact for the given userPhone
     fun addContact(userPhone: String, firstname: String, lastname: String, phone: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -143,11 +141,14 @@ class DatabaseHelper(context: Context) :
         return db.insert(TABLE_CONTACTS, null, values)
     }
 
+    // Get all contacts associated with a specific user
     fun getContactsForUser(userPhone: String): Cursor {
         val db = readableDatabase
         return db.query(TABLE_CONTACTS, null, "$COL_CONTACT_USER_PHONE=?", arrayOf(userPhone), null, null, null)
     }
+    
 
+    // Update an existing contact row
     fun updateContact(id: Int, firstname: String, lastname: String, phone: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -158,12 +159,13 @@ class DatabaseHelper(context: Context) :
         return db.update(TABLE_CONTACTS, values, "$COL_CONTACT_ID=?", arrayOf(id.toString()))
     }
 
+    // Delete a contact based on its id
     fun deleteContact(id: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_CONTACTS, "$COL_CONTACT_ID=?", arrayOf(id.toString()))
     }
 
-    // -------------------------------------------------- LOCATION METHODS ---------------------------------------------------
+    // Add a safe location with name, address and coordinates for a given user
     fun addLocation(userPhone: String, name: String, address: String, lat: Double, lng: Double): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -176,16 +178,19 @@ class DatabaseHelper(context: Context) :
         return db.insert(TABLE_LOCATIONS, null, values)
     }
 
+    // Get all saved safe locations for a specific user
     fun getLocationsForUser(userPhone: String): Cursor {
         val db = readableDatabase
         return db.query(TABLE_LOCATIONS, null, "$COL_LOCATION_USER_PHONE=?", arrayOf(userPhone), null, null, null)
     }
 
+    // Delete a safe location row
     fun deleteLocation(id: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_LOCATIONS, "$COL_LOCATION_ID=?", arrayOf(id.toString()))
     }
 
+    // Update the name/address/coordinates for an existing safe location
     fun updateLocation(id: Int, name: String, address: String, lat: Double, lng: Double): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
