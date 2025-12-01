@@ -38,6 +38,7 @@ class ContactsActivity : AppCompatActivity() {
         btnAddContact = findViewById(R.id.btnAddContact)
         backButton=findViewById(R.id.backButton)
 
+        // Get the current user's phone number from SharedPreferences (UserSession)
         currentPhone = getSharedPreferences("UserSession", MODE_PRIVATE)
             .getString("USER_PHONE", null)
 
@@ -47,6 +48,7 @@ class ContactsActivity : AppCompatActivity() {
 
         loadContacts()
 
+        // Add new contact when user taps the + button
         btnAddContact.setOnClickListener {
             showContactDialog(null)
         }
@@ -55,10 +57,12 @@ class ContactsActivity : AppCompatActivity() {
         }
     }
 
+    // Loads all contacts for the current user from the database into contactList
     private fun loadContacts() {
         contactList.clear()
         val cursor = dbHelper.getContactsForUser(currentPhone!!)
         while (cursor.moveToNext()) {
+            // Fetch contacts for this user from DB (cursor based)
             val contact = Contact(
                 id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CONTACT_ID)),
                 firstname = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_CONTACT_FIRSTNAME)),
@@ -71,6 +75,7 @@ class ContactsActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
+    // Shows a dialog for adding a new contact or editing an existing one
     private fun showContactDialog(existing: Contact?) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_contact, null)
         val etFirst = dialogView.findViewById<EditText>(R.id.etFirstName)
@@ -102,6 +107,7 @@ class ContactsActivity : AppCompatActivity() {
                     return@setPositiveButton
                 }
 
+                // Phone validation: we only allow 10-digit phone numbers
                 if (!ValidationUtils.isValidPhone(phone)) {
                     Toast.makeText(this, "Phone must be 10 digits", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -139,6 +145,7 @@ class ContactsActivity : AppCompatActivity() {
             .show()
     }
 
+    // RecyclerView adapter for displaying each contact row
     inner class ContactAdapter(private val contacts: List<Contact>) :
         RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
@@ -161,10 +168,12 @@ class ContactsActivity : AppCompatActivity() {
             holder.tvName.text = "${contact.firstname} ${contact.lastname}"
             holder.tvPhone.text = contact.phone
 
+            // Edit button: opens dialog with pre-filled info
             holder.btnEdit.setOnClickListener {
                 showContactDialog(contact)
             }
 
+            // Delete button: ask for confirmation before removing contact
             holder.btnDelete.setOnClickListener {
                 AlertDialog.Builder(this@ContactsActivity)
                     .setTitle("Delete Contact")
@@ -178,6 +187,8 @@ class ContactsActivity : AppCompatActivity() {
                     .show()
             }
 
+            
+        
             holder.btnCall.setOnClickListener {
                 // Show confirmation dialog before calling
                 AlertDialog.Builder(this@ContactsActivity)
