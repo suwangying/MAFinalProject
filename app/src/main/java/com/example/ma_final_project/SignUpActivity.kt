@@ -9,6 +9,7 @@ import android.content.Intent
 import android.widget.ImageView
 import com.example.ma_final_project.utils.ValidationUtils
 
+// Handles user registration: form validation + saving user into SQLite + starting a session.
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var etFirstName: EditText
@@ -34,7 +35,7 @@ class SignUpActivity : AppCompatActivity() {
         btnSignUp = findViewById(R.id.btnSignUp)
         backIcon=findViewById(R.id.backIcon)
 
-
+    // Per-field validation when focus is lost (gives instant feedback to the user)
         etFirstName.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 val firstName = etFirstName.text.toString().trim()
@@ -102,6 +103,7 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+            // Main sign up button click: full validation + DB insert + navigation
         btnSignUp.setOnClickListener {
             val firstName = etFirstName.text.toString().trim()
             val lastName = etLastName.text.toString().trim()
