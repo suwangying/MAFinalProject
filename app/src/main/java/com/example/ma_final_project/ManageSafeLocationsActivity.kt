@@ -7,6 +7,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
+// This screen shows all the user's saved safe locations
+// and lets them add, update, delete, or open them in Google Maps.
+
 class ManageSafeLocationsActivity : AppCompatActivity() {
 
     private val userPhone = "9999999999"
@@ -29,7 +32,7 @@ class ManageSafeLocationsActivity : AppCompatActivity() {
 
         loadLocations()
     }
-
+    // Reads safe locations from DB and dynamically builds UI cards for each one
     private fun loadLocations() {
         container.removeAllViews()
         val cursor = db.getLocationsForUser(userPhone)
@@ -118,7 +121,7 @@ class ManageSafeLocationsActivity : AppCompatActivity() {
         }
         cursor.close()
     }
-
+// Opens Google Maps app with driving directions to the given coordinates
     private fun openGoogleMaps(lat: Double, lng: Double) {
         try {
             val uri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving")
