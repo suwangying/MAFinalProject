@@ -15,8 +15,9 @@ class FakeVoiceCallActivity : AppCompatActivity() {
     private lateinit var tvTimer: TextView
     private lateinit var btnEnd: Button
     private lateinit var btnSpeaker: Button
-
+    // MediaPlayer for playing the fake voice message
     private var player: MediaPlayer? = null
+    // Timer used to show how long the fake call has been "active"
     private var timer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,23 +28,25 @@ class FakeVoiceCallActivity : AppCompatActivity() {
         tvTimer = findViewById(R.id.tvTimer)
         btnEnd = findViewById(R.id.btnEnd)
         btnSpeaker = findViewById(R.id.btnSpeaker)
-
+        
+    // Caller name comes from intent, otherwise use default
         val name = intent.getStringExtra("caller_name")
         tvCallerName.text = if (name.isNullOrBlank()) "Jordan (Voice)" else "$name (Voice)"
 
         setupSpeaker(true)
+        // Start the call timer and fake audio message
         startTimer()
         playSingleClip()
-
+    // End button just closes the activity
         btnEnd.setOnClickListener { finish() }
         btnSpeaker.setOnClickListener {
             val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
             setupSpeaker(!am.isSpeakerphoneOn)
         }
     }
-
+// Plays a single pre-recorded voice clip to simulate the other person talking
     private fun playSingleClip() {
-        // your one clip here:
+        // Our audio file stored in res/raw
         val resId = R.raw.call_message
 
         stopVoice()
