@@ -33,12 +33,12 @@ class FakeVideoCallActivity : AppCompatActivity() {
     private lateinit var tvTimer: TextView
     private lateinit var btnEnd: Button
     private lateinit var btnSpeaker: Button
-
+     // ExoPlayer for the fake remote caller video
     private var player: ExoPlayer? = null
+    // Simple timer to show how long the call has been going on
     private var timer: CountDownTimer? = null
     private val cameraExecutor by lazy { Executors.newSingleThreadExecutor() }
-
-    // ask only CAMERA; we’re not recording you, just showing preview
+    // Request camera permission only (we are not recording, just previewing)
     private val permLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -48,6 +48,7 @@ class FakeVideoCallActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Keep screen on during the fake call so it feels real
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_fake_video_call)
 
@@ -58,10 +59,10 @@ class FakeVideoCallActivity : AppCompatActivity() {
         btnEnd = findViewById(R.id.btnEnd)
         btnSpeaker = findViewById(R.id.btnSpeaker)
         selfPreview = findViewById(R.id.selfPreview)
-
+    // Allow user to drag the small self-preview around the screen
         enableDrag(selfPreview)
 
-
+// Caller name comes from intent, fallback to default
         val caller = intent.getStringExtra("caller_name")
         tvCallerName.text = if (caller.isNullOrBlank()) "Ava (Video)" else "$caller (Video)"
 
@@ -92,7 +93,7 @@ class FakeVideoCallActivity : AppCompatActivity() {
             p.playWhenReady = true
         }
     }
-
+    // Start the mini self camera preview in the corner using CameraX
     private fun startSelfPreview() {
 
         selfPreview.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
@@ -127,7 +128,7 @@ class FakeVideoCallActivity : AppCompatActivity() {
             }
         }, ContextCompat.getMainExecutor(this))
     }
-
+ // Set up button click listeners
     private fun wireClicks() {
         btnEnd.setOnClickListener { finish() }
         btnSpeaker.setOnClickListener {
